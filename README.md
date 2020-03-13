@@ -35,12 +35,12 @@ The discriminator loss function:
 
 ### Data Visualization
 For GAN, the generator loss looks like:   
-<div align=center><img src="https://github.com/MianWang123/Generative-Adversarial-Network/blob/master/pics/g_loss.png" width='320'/></div>   
+<div align=center><img src="https://github.com/MianWang123/Generative-Adversarial-Network/blob/master/pics/g_loss.png" width='400'/></div>   
 the discriminator loss looks like:   
-<div align=center><img src="https://github.com/MianWang123/Generative-Adversarial-Network/blob/master/pics/d_loss.png" width='320'/></div>   
+<div align=center><img src="https://github.com/MianWang123/Generative-Adversarial-Network/blob/master/pics/d_loss.png" width='400'/></div>   
 
 After training for only 10 epochs, the GAN model can generate images below:  
-<div align=center><img src="https://github.com/MianWang123/Generative-Adversarial-Network/blob/master/pics/generator%20image.png" width='320'/></div>
+<div align=center><img src="https://github.com/MianWang123/Generative-Adversarial-Network/blob/master/pics/generator%20image.png" width='400'/></div>
 
 
 ### Acknowledge  
