@@ -6,7 +6,7 @@ Generative Adversarial Network
 ### Task and Model
 
 The task is to generate as similar images(fake images) as the given dataset(real images).  
-The Generative Adversarial Network(GAN) and Least Square GAN are created here, to generate images for the UT Zappos50K Dataset.
+The Generative Adversarial Network(GAN) is created here, to generate images for the UT Zappos50K Dataset.
 
 
 ### Prerequisites
@@ -31,10 +31,6 @@ The generator loss function:
 <div align=center><img src="http://chart.googleapis.com/chart?cht=tx&chl= L_G = \frac{1}{n}\sum_{i=1}^{n}L_{CE}(D(G(z)), 1) " style="border:none;"></div>  
 The discriminator loss function:  
 <div align=center><img src="http://chart.googleapis.com/chart?cht=tx&chl= L_D = \frac{1}{2n}\sum_{i=1}^{n}L_{CE}(D(X_i), 1) %2B L_{CE}(D(G(z)), 0) " style="border:none;"></div>
- 
-For Least Square GAN, the loss functions should look like:
-<div align=center><img src="http://chart.googleapis.com/chart?cht=tx&chl= \min _{D} V_{\mathrm{LSGAN}}(D)=\frac{1}{2} \mathbb{E}_{X~p_{\mathrm{dnta}}(X)}\left[(D(X)-1)^{2}\right] %2B \frac{1}{2} \mathbb{E}_{Z~p_{z}(Z)}\left[(D(G(Z)))^{2}\right] " style="border:none;"></div>  
-<div align=center><img src="http://chart.googleapis.com/chart?cht=tx&chl= \min _{G} V_{\mathrm{LSGAN}}(G)=\frac{1}{2} \mathbb{E}_{Z~p_{z}(Z)}\left[(D(G(Z))-1)^{2}\right] " style="border:none;"></div>
 
 
 ### Data Visualization
