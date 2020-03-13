@@ -1,3 +1,8 @@
+"""
+CIS522-Deep Learning for Data Science: Generative Adversarial Network
+Author: Mian Wang  
+Time: 3/6/20
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -13,16 +18,18 @@ from PIL import Image
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchsummary import summary
 
-# Step 0: set GPU in google colab and launch tensorboard
+# Step 0: Set GPU in google colab and launch tensorboard
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'gpu')
 %load_ext tensorboard
 
-# Step 1: import the dataset
+
+# Step 1: Import the dataset
 UT_transforms = transforms.Compose([ transforms.Resize((64, 64)),
                                       transforms.ToTensor()      ])
 UT_dataset = dset.ImageFolder(root='DATASETS/UTZappos50K', transform=UT_transforms)
 
-# Step 2: split the data into train, validation, and test set(7:2:1), then set batch size to 64
+
+# Step 2: Split the data into train, validation, and test set(7:2:1), then set batch size to 64
 idx = list(range(len(UT_dataset)))
 np.random.shuffle(idx)
 
@@ -36,11 +43,13 @@ ut_train_loader = DataLoader(UT_dataset, batch_size=batch_size, sampler=ut_train
 ut_val_loader = DataLoader(UT_dataset, batch_size=batch_size, sampler=ut_val_sampler)
 ut_test_loader = DataLoader(UT_dataset, batch_size=batch_size, sampler=ut_test_sampler)
 
-# Step 3: create a normally distributed latent vector z
+
+# Step 3: Create a normally distributed latent vector z
 feature_length = 128
 z = torch.randn(size=[batch_size,feature_length,1,1], device=device)
 
-# Step 4: establish the generator
+
+# Step 4: Establish the generator, use summary to check the network
 class Generator(nn.Module):
   def __init__(self):
     super(Generator,self).__init__()
@@ -65,7 +74,8 @@ class Generator(nn.Module):
 generator = Generator().to(device)
 summary(generator, (feature_length,1,1))
 
-# Step 5: build the discriminator
+
+# Step 5: Build the discriminator
 class Discriminator(nn.Module):
   def __init__(self):
     super(Discriminator,self).__init__()
@@ -90,7 +100,8 @@ class Discriminator(nn.Module):
 discriminator = Discriminator().to(device)
 summary(discriminator, (3,64,64))
 
-# Step 6: set the generator loss function
+
+# Step 6: Set the generator loss function
 def generator_loss(generator, discriminator, z):
   criterion = nn.BCELoss()
   ones = torch.ones(z.size(0), device=device)   
@@ -98,7 +109,7 @@ def generator_loss(generator, discriminator, z):
   return loss_gen
  
  
-# Step 6: set the discriminator loss function
+# Step 7: Set the discriminator loss function
 def discriminator_loss(discriminator, generator, real_img, z, fuzzy=False):
   criterion = nn.BCELoss()
   if fuzzy:
@@ -113,11 +124,13 @@ def discriminator_loss(discriminator, generator, real_img, z, fuzzy=False):
   loss_fake = criterion(discriminator(fake_img), zeros)   
   return (loss_real+loss_fake)/2
 
-# Step 7: set the optimizer for generator and discriminator
+
+# Step 8: Set the optimizer for generator and discriminator
 optimizer_gen = torch.optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 optimizer_dis = torch.optim.Adam(discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 
-# Step 8: displays the images in a (rows * cols) grid
+
+# Step 9: Displays the images in a (rows * cols) grid
 def generate_images(generator, z, rows, cols, name=None, show=True):
   imgs = generator(z)
   imgs = imgs[:rows*cols].cpu().detach()
@@ -138,15 +151,17 @@ def generate_images(generator, z, rows, cols, name=None, show=True):
   if(show): plt.show()
   else: plt.close()
 
-# Step 9: train the GAN model
+    
+# Step 10: Train the GAN model
+logger = SummaryWriter('logs/GAN')
 epochs = 10
 step = 0
-logger = SummaryWriter('logs/GAN')
 
 for epoch in range(epochs):
   for i, (x,_) in enumerate(ut_train_loader):
     step += 1
     real_img = x.to(device)
+    # choose a normally distributed latent vector
     z = torch.randn(size=[x.size(0),feature_length,1,1], device=device)
 
     # train generator
@@ -170,5 +185,6 @@ for epoch in range(epochs):
     if step % 500 == 0:
       generate_images(generator, z, 2, 5, name='generator image', show=True)
    
-   # Step 10: show the training loss in tensorboard
+  
+   # Step 11: Display the training loss in tensorboard
    %tensorboard --logdir 'logs/GAN'
